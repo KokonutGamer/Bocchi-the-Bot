@@ -1,0 +1,8 @@
+0|Hi there! I'm Bocchi the bot, a general purpose discord bot developed by Gabe Lapingcao. Please have an admin react to this message to get started.
+1|Please specify the channel you would like to use to continue configuring this application. Note that this channel will marked as the Admin Channel from now on.
+2|Please specify the channel you would like for me to use to make announcements.
+3|Please specify the channel you would like for me to use to greet new members.
+4|That's it for my setup! Thank you for inviting me to this guild I'm looking forward to doing all sorts of things in the future.
+5|Uh oh, Bocchi could not find the channel you specified! Please specify a channel in the current guild.
+6|It seems there are multiple channels with this name. Please specify a channel with a unique name.
+7|Uh oh! It seems like Bocchi cannot talk in this channel. Give Bocchi permissions, or try a different channel!
