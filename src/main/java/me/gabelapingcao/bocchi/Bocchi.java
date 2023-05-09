@@ -5,6 +5,8 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import net.dv8tion.jda.api.utils.ChunkingFilter;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
 
 import javax.security.auth.login.LoginException;
 
@@ -12,6 +14,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 import me.gabelapingcao.bocchi.commands.AnnouncementCommand;
 import me.gabelapingcao.bocchi.commands.HelpCommand;
 import me.gabelapingcao.bocchi.commands.InfoCommand;
+import me.gabelapingcao.bocchi.commands.RemoveAllMembers;
 import me.gabelapingcao.bocchi.listeners.GeneralListener;
 import me.gabelapingcao.bocchi.listeners.InitialConfiguration;
 import me.gabelapingcao.bocchi.util.InheritedAnnotatedEventManager;
@@ -33,13 +36,17 @@ public class Bocchi {
 		DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(token);
 		builder.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGE_REACTIONS,
 				GatewayIntent.MESSAGE_CONTENT);
+		builder.setMemberCachePolicy(MemberCachePolicy.ALL); // Cache all members visible to JDA (within the same
+																// server)
+		builder.setChunkingFilter(ChunkingFilter.ALL); // Caches all member on startup using lazy loading
 		builder.setStatus(OnlineStatus.ONLINE);
 		builder.setActivity(Activity.playing(" I am dying of burnout"));
 		builder.setEventManagerProvider(id -> {
 			return new InheritedAnnotatedEventManager();
 		});
 		builder.addEventListeners(new InitialConfiguration(), new GeneralListener(), help.registerCommand(help),
-				help.registerCommand(new InfoCommand()), help.registerCommand(new AnnouncementCommand()));
+				help.registerCommand(new InfoCommand()), help.registerCommand(new AnnouncementCommand()),
+				help.registerCommand(new RemoveAllMembers()));
 
 		shardManager = builder.build();
 	}

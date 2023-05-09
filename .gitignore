@@ -104,3 +104,6 @@ buildNumber.properties
 .project
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
+
+# Project specific files
+.env
