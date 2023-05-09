@@ -4,8 +4,8 @@
 
 	<groupId>me.gabelapingcao</groupId>
 	<artifactId>bocchi</artifactId>
-	<version>1.0.0</version>
-	<name>stanley</name>
+	<version>1.0.2</version>
+	<name>bocchi-the-bot</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
