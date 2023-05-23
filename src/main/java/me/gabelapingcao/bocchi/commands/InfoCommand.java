@@ -12,7 +12,7 @@ public class InfoCommand extends Command {
 	@Override
 	public void onCommand(MessageReceivedEvent e, String[] args) {
 		MessageCreateBuilder builder = new MessageCreateBuilder();
-		builder.addContent("__Bocchi Information__\n").addContent("    **Version**: 1.0.1\n")
+		builder.addContent("__Bocchi Information__\n").addContent("    **Version**: 1.0.3\n")
 				.addContent("    **ID**: " + e.getJDA().getSelfUser().getId() + "\n").addContent("__Creator__\n")
 				.addContent("    **Name**: Gabe Lapingcao\n").addContent("    **ID**: Not Available\n")
 				.addContent("    **Github**: Not Available\n").addContent("__Development__\n")
