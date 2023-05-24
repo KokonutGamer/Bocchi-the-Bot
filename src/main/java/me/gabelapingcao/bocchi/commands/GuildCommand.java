@@ -16,9 +16,9 @@ public abstract class GuildCommand implements BocchiCommand {
 
 	@SubscribeEvent
 	public void onGuildJoin(GuildJoinEvent event) {
-		log.info("Joined a guild!");
 		SlashCommandData command = Commands.slash(getName(), getDescription());
-		command.addOptions(getOptions());
+		if (getOptions() != null)
+			command.addOptions(getOptions());
 		command.setDefaultPermissions(getPermissions());
 		event.getGuild().upsertCommand(command).queue();
 	}
@@ -26,9 +26,7 @@ public abstract class GuildCommand implements BocchiCommand {
 	@SubscribeEvent
 	@Override
 	public void onCommand(SlashCommandInteractionEvent event) {
-		log.info("detected a slashcommandinteractionevent");
 		if (event.getName().equals(getName())) {
-			log.info("calling in " + this.getClass().getSimpleName());
 			call(event);
 		}
 	}

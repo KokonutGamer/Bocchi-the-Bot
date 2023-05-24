@@ -27,9 +27,11 @@ import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
  * guilds and adding new guilds to be stored on a system (usually my computer).
  * 
  * @author Gabe Lapingcao
- * @see me.gabelapingcao.bocchi.listeners.InitialConfiguration InitialConfiguration
  */
 public class GuildInfoLoader {
+
+	// TODO instead of creating a custom loader, use GSON to load Guild
+	// Configuration Information
 
 	private static final Logger logger = (Logger) LoggerFactory.getLogger(GuildInfoLoader.class);
 	private File info;

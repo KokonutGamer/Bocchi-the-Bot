@@ -12,7 +12,6 @@ import net.dv8tion.jda.api.entities.channel.unions.GuildChannelUnion;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.SubscribeEvent;
-import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -25,7 +24,7 @@ import net.dv8tion.jda.api.interactions.modals.ModalMapping;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 
 /**
- * @author School
+ * @author Gabe Lapingcao
  *
  */
 public class AnnouncementCommand extends GuildCommand {
@@ -36,9 +35,6 @@ public class AnnouncementCommand extends GuildCommand {
 
 	@Override
 	public void call(SlashCommandInteractionEvent event) {
-		// Debugging
-		log.info("Inside of method call");
-
 		// TODO set the fallback to this guild's default announcement channel
 		announcementChannel = event.getOption("channel", null, OptionMapping::getAsChannel);
 
@@ -58,7 +54,8 @@ public class AnnouncementCommand extends GuildCommand {
 			List<String> values = event.getValues().stream().map(ModalMapping::getAsString).toList();
 			MessageCreateData announcement = op.CreateAnnouncement(event.getUser(), values.get(0), values.get(1));
 			announcementChannel.asGuildMessageChannel().sendMessage(announcement).queue();
-			event.reply("Announcement sent in channel ").setEphemeral(true).queue();
+			event.reply("Announcement sent in channel " + announcementChannel.getJumpUrl()).setEphemeral(true).queue();
+			announcementChannel = null;
 		}
 	}
 

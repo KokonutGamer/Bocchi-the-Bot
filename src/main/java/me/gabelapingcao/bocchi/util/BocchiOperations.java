@@ -19,7 +19,7 @@ import net.dv8tion.jda.api.utils.messages.MessageEditData;
  *
  */
 public class BocchiOperations extends OperationsAbstractFactory {
-	
+
 	private final MessageCreateBuilder message = new MessageCreateBuilder();
 	private final MessageEditBuilder editor = new MessageEditBuilder();
 	private final EmbedBuilder embed = new EmbedBuilder();
@@ -58,16 +58,16 @@ public class BocchiOperations extends OperationsAbstractFactory {
 		resetEmbed();
 		embed.setAuthor(author.getName(), null, author.getAvatarUrl());
 		embed.setDescription(text);
-		
+
 		return message.setEmbeds(embed.build()).build();
 	}
-	
+
 	@Override
 	public MessageCreateData CreateReactableMessage(User author, String text, Button... buttons) {
 		resetEmbed();
 		embed.setAuthor(author.getName(), null, author.getAvatarUrl());
 		embed.setDescription(text);
-		
+
 		return message.setEmbeds(embed.build()).addActionRow(buttons).build();
 	}
 
@@ -78,7 +78,7 @@ public class BocchiOperations extends OperationsAbstractFactory {
 		embed.setTitle(title);
 		embed.setDescription(text);
 		embed.setTimestamp(Instant.now());
-		
+
 		return message.setEmbeds(embed.build()).build();
 	}
 
@@ -87,7 +87,7 @@ public class BocchiOperations extends OperationsAbstractFactory {
 		resetEmbed();
 		embed.setDescription("Welcome " + member.getAsMention() + " to the server!");
 		embed.setFooter("This is an automated message from Bocchi the bot");
-		
+
 		return message.setEmbeds(embed.build()).build();
 	}
 
@@ -95,7 +95,7 @@ public class BocchiOperations extends OperationsAbstractFactory {
 	public void EditMessage(Message message, MessageEditData data) {
 		message.editMessage(data);
 	}
-	
+
 	private void resetEmbed() {
 		embed.clear();
 		embed.setColor(getColor());

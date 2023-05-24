@@ -17,8 +17,8 @@ import net.dv8tion.jda.api.utils.messages.MessageEditData;
 
 /**
  * The OperationsAbstractFactory provides a template for operation-based classes
- * working with the Java Discord API (JDA) in order to create universal operations
- * such as uniform message formats and uniform command prompts.
+ * working with the Java Discord API (JDA) in order to create universal
+ * operations such as uniform message formats and uniform command prompts.
  * 
  * @author Gabe Lapingcao
  * @see net.dv8tion.jda.api.JDA JDA
@@ -79,5 +79,8 @@ public abstract class OperationsAbstractFactory {
 	public void setWelcomeChannel(TextChannel welcomeChannel) {
 		this.welcomeChannel = welcomeChannel;
 	}
+
+	// TODO create a Menu Factory method
+	// GSON should be used to store Guild Configuration Information
 
 }
