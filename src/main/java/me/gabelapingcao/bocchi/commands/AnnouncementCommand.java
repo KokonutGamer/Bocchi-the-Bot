@@ -8,92 +8,83 @@ import java.util.Collections;
 import java.util.List;
 
 import me.gabelapingcao.bocchi.util.BocchiOperations;
-import me.gabelapingcao.bocchi.util.GuildInfoLoader;
-import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.entities.channel.unions.GuildChannelUnion;
+import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.SubscribeEvent;
+import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.text.TextInput;
+import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
+import net.dv8tion.jda.api.interactions.modals.Modal;
+import net.dv8tion.jda.api.interactions.modals.ModalMapping;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 
 /**
  * @author School
  *
  */
-public class AnnouncementCommand extends Command {
+public class AnnouncementCommand extends GuildCommand {
 
+	private static final String MODAL_ID = "announcement template";
 	private static final BocchiOperations op = BocchiOperations.getInstance();
-	private static final GuildInfoLoader info = GuildInfoLoader.getInstance();
+	private GuildChannelUnion announcementChannel = null;
+
+	@Override
+	public void call(SlashCommandInteractionEvent event) {
+		// Debugging
+		log.info("Inside of method call");
+
+		// TODO set the fallback to this guild's default announcement channel
+		announcementChannel = event.getOption("channel", null, OptionMapping::getAsChannel);
+
+		// Create the modal for announcement submission
+		TextInput title = TextInput.create("title", "Title", TextInputStyle.SHORT).setPlaceholder("Title")
+				.setMinLength(1).setMaxLength(100).build();
+		TextInput content = TextInput.create("content", "Content", TextInputStyle.PARAGRAPH)
+				.setPlaceholder("Announcement Description").setMinLength(1).setMaxLength(1000).build();
+		Modal announcementTemplate = Modal.create(MODAL_ID, "Announcement Template")
+				.addActionRows(ActionRow.of(title), ActionRow.of(content)).build();
+		event.replyModal(announcementTemplate).queue();
+	}
 
 	@SubscribeEvent
-	public void onCommandReceived(MessageReceivedEvent event) {
-		if (!event.getMember().hasPermission(Permission.ADMINISTRATOR)) {
-			return;
+	public void announcementSubmission(ModalInteractionEvent event) {
+		if (event.getModalId().equals(MODAL_ID)) {
+			List<String> values = event.getValues().stream().map(ModalMapping::getAsString).toList();
+			MessageCreateData announcement = op.CreateAnnouncement(event.getUser(), values.get(0), values.get(1));
+			announcementChannel.asGuildMessageChannel().sendMessage(announcement).queue();
+			event.reply("Announcement sent in channel ").setEphemeral(true).queue();
 		}
-		super.onCommandReceived(event);
-	}
-
-	@Override
-	public void onCommand(MessageReceivedEvent event, String[] args) {
-		if (args.length < 2) {
-			event.getChannel()
-					.sendMessage(op.SimpleCreateMessage(
-							"**Error**: please specify a title and/or description to add to this announcement."))
-					.queue();
-			return;
-		}
-
-		StringBuilder sbTitle = new StringBuilder();
-		StringBuilder sbText = new StringBuilder();
-		boolean isTitle = false;
-		boolean isDesc = false;
-		for (int i = 1; i < args.length; i++) {
-			
-			if (isDesc) {
-				sbText.append(" " + args[i]);
-			}
-			
-			if (isTitle) {
-				if (args[i].startsWith("-")) {
-					sbText.append(args[i].substring(1));
-					isDesc = true;
-					isTitle = false;
-				} else {
-					sbTitle.append(" " + args[i]);					
-				}
-			}
-			
-			if (args[i].startsWith("+") && !isTitle && !isDesc) {
-				sbTitle.append(args[i].substring(1));
-				isTitle = true;
-			}
-		}
-		String title = (sbTitle.isEmpty()) ? null : sbTitle.toString();
-		String text = (sbText.isEmpty()) ? null : sbText.toString();
-		MessageChannel announcements = info.getGuildChannels(event.getGuild()).get(2);
-		MessageCreateData message = op.CreateAnnouncement(event.getAuthor(), title, text);
-		announcements.sendMessage(message).queue();
-	}
-
-	@Override
-	public List<String> getAliases() {
-		return Arrays.asList(".announce", "..a");
 	}
 
 	@Override
 	public String getDescription() {
-		return "Allows an administrator to create an announcement and send it to the guild's specified announcement channel";
+		return "Allows an administrator to create an announcement and send it to the specified channel";
 	}
 
 	@Override
 	public String getName() {
-		return "Announcement command";
+		return "announcement";
 	}
 
 	@Override
 	public List<String> getUsageInstructions() {
-		return Collections.singletonList(".announce - Sends an announcement message to the announcement channel.\n"
-				+ "To insert the title, prepend a \"+\" symbol to the front of the title text.\n"
-				+ "To insert the description, prepend a \"-\" symbol to the front of the description text.");
+		return Collections.singletonList("Sends an announcement message to the announcement channel");
+	}
+
+	@Override
+	public List<OptionData> getOptions() {
+		return Arrays.asList(new OptionData(OptionType.CHANNEL, "channel", "The channel to send the announcement to"));
+	}
+
+	@Override
+	public DefaultMemberPermissions getPermissions() {
+		return DefaultMemberPermissions.DISABLED;
 	}
 
 }

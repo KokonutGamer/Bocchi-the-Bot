@@ -37,7 +37,7 @@ public class ClassLoaderHelper {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T> Set<? extends T> newInstanceOfAllClasses(Class<T> clazz, String packageName) {
+	public <T> Set<T> newInstanceOfAllClasses(Class<T> clazz, String packageName) {
 		Set<Class<?>> setOfClassObjects = findAllClasses(packageName);
 		Set<T> newInstances = new CopyOnWriteArraySet<T>();
 		try {

@@ -12,11 +12,6 @@ import javax.security.auth.login.LoginException;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import me.gabelapingcao.bocchi.commands.AnnouncementCommand;
-import me.gabelapingcao.bocchi.commands.HelpCommand;
-import me.gabelapingcao.bocchi.commands.InfoCommand;
-import me.gabelapingcao.bocchi.commands.RemoveAllMembers;
-import me.gabelapingcao.bocchi.listeners.GeneralListener;
-import me.gabelapingcao.bocchi.listeners.InitialConfiguration;
 import me.gabelapingcao.bocchi.util.InheritedAnnotatedEventManager;
 
 public class Bocchi {
@@ -32,7 +27,6 @@ public class Bocchi {
 	private Bocchi() throws LoginException {
 		config = Dotenv.configure().load();
 		String token = config.get("TOKEN");
-		HelpCommand help = new HelpCommand();
 		DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(token);
 		builder.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGE_REACTIONS,
 				GatewayIntent.MESSAGE_CONTENT);
@@ -44,9 +38,7 @@ public class Bocchi {
 		builder.setEventManagerProvider(id -> {
 			return new InheritedAnnotatedEventManager();
 		});
-		builder.addEventListeners(new InitialConfiguration(), new GeneralListener(), help.registerCommand(help),
-				help.registerCommand(new InfoCommand()), help.registerCommand(new AnnouncementCommand()),
-				help.registerCommand(new RemoveAllMembers()));
+		builder.addEventListeners(new AnnouncementCommand());
 
 		shardManager = builder.build();
 	}
