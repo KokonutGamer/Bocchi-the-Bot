@@ -40,21 +40,21 @@ public class BocchiOperations extends OperationsAbstractFactory {
 	}
 
 	@Override
-	public MessageCreateData SimpleCreateMessage(String text) {
+	public MessageCreateData simpleCreateMessage(String text) {
 		message.clear();
 		message.setContent(text);
 		return message.build();
 	}
 
 	@Override
-	public void SimpleEditMessage(Message message, String text) {
+	public void simpleEditMessage(Message message, String text) {
 		editor.clear();
 		editor.setContent(text);
 		message.editMessage(this.editor.build());
 	}
 
 	@Override
-	public MessageCreateData SimpleCreateEmbedMessage(User author, String text) {
+	public MessageCreateData simpleCreateEmbedMessage(User author, String text) {
 		resetEmbed();
 		embed.setAuthor(author.getName(), null, author.getAvatarUrl());
 		embed.setDescription(text);
@@ -63,7 +63,7 @@ public class BocchiOperations extends OperationsAbstractFactory {
 	}
 
 	@Override
-	public MessageCreateData CreateReactableMessage(User author, String text, Button... buttons) {
+	public MessageCreateData createReactableMessage(User author, String text, Button... buttons) {
 		resetEmbed();
 		embed.setAuthor(author.getName(), null, author.getAvatarUrl());
 		embed.setDescription(text);
@@ -72,7 +72,7 @@ public class BocchiOperations extends OperationsAbstractFactory {
 	}
 
 	@Override
-	public MessageCreateData CreateAnnouncement(User author, String title, String text) {
+	public MessageCreateData createAnnouncement(User author, String title, String text) {
 		resetEmbed();
 		embed.setAuthor(author.getName(), null, author.getAvatarUrl());
 		embed.setTitle(title);
@@ -83,7 +83,7 @@ public class BocchiOperations extends OperationsAbstractFactory {
 	}
 
 	@Override
-	public MessageCreateData CreateWelcomeMessage(User member) {
+	public MessageCreateData createWelcomeMessage(User member) {
 		resetEmbed();
 		embed.setDescription("Welcome " + member.getAsMention() + " to the server!");
 		embed.setFooter("This is an automated message from Bocchi the bot");
@@ -92,7 +92,7 @@ public class BocchiOperations extends OperationsAbstractFactory {
 	}
 
 	@Override
-	public void EditMessage(Message message, MessageEditData data) {
+	public void editMessage(Message message, MessageEditData data) {
 		message.editMessage(data);
 	}
 

@@ -14,7 +14,7 @@ public class GeneralListener {
 	
 	@SubscribeEvent
 	public void onMemberJoin(GuildMemberJoinEvent event) {
-		op.getWelcomeChannel(event.getGuild()).sendMessage(op.CreateWelcomeMessage(event.getUser())).queue();
+		op.getWelcomeChannel(event.getGuild()).sendMessage(op.createWelcomeMessage(event.getUser())).queue();
 		logger.info("User " + event.getUser().getName() + " joined the guild \"" + event.getGuild().getName() + "\"");
 	}
 	

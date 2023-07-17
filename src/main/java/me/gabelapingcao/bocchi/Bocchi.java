@@ -12,8 +12,19 @@ import javax.security.auth.login.LoginException;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import me.gabelapingcao.bocchi.commands.AnnouncementCommand;
+import me.gabelapingcao.bocchi.commands.ConfigureCommand;
+import me.gabelapingcao.bocchi.listeners.MenuListener;
 import me.gabelapingcao.bocchi.util.InheritedAnnotatedEventManager;
 
+/**
+ * Bocchi the Bot is a general purpose Discord application. Its main purpose is
+ * to serve as the Everett Community College STEM Club's weekly reminder and
+ * moderation bot.
+ * 
+ * @author Gabe Lapingcao
+ * @version 1.0.6
+ * @since 2023-07-12
+ */
 public class Bocchi {
 
 	private final Dotenv config;
@@ -22,7 +33,7 @@ public class Bocchi {
 	/**
 	 * Loads environment variables and builds the bot shard manager.
 	 * 
-	 * @throws LoginException when the bot token is invalid.
+	 * @exception LoginException when the bot token passed is invalid
 	 */
 	private Bocchi() throws LoginException {
 		config = Dotenv.configure().load();
@@ -30,15 +41,15 @@ public class Bocchi {
 		DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(token);
 		builder.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGE_REACTIONS,
 				GatewayIntent.MESSAGE_CONTENT);
-		builder.setMemberCachePolicy(MemberCachePolicy.ALL); // Cache all members visible to JDA (within the same
-																// server)
+		builder.setMemberCachePolicy(MemberCachePolicy.ALL); // Cache all members visible to JDA
+		// TODO optimize ChunkingFilter
 		builder.setChunkingFilter(ChunkingFilter.ALL); // Caches all member on startup using lazy loading
 		builder.setStatus(OnlineStatus.ONLINE);
 		builder.setActivity(Activity.playing(" I am dying of burnout"));
 		builder.setEventManagerProvider(id -> {
 			return new InheritedAnnotatedEventManager();
 		});
-		builder.addEventListeners(new AnnouncementCommand());
+		builder.addEventListeners(new AnnouncementCommand(), new ConfigureCommand(), MenuListener.getInstance());
 
 		shardManager = builder.build();
 	}
@@ -46,7 +57,7 @@ public class Bocchi {
 	/**
 	 * Retrieves the Dotenv file.
 	 * 
-	 * @return the Dotenv file for the bot.
+	 * @return the Dotenv file for the bot
 	 */
 	public Dotenv getConfig() {
 		return config;

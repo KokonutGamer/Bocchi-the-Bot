@@ -29,30 +29,15 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateData;
  */
 public class AnnouncementCommand extends GuildCommand {
 
-	private static final String MODAL_ID = "announcement template";
+	private static final String MODAL_ID = "announcement_template";
 	private static final BocchiOperations op = BocchiOperations.getInstance();
-	private GuildChannelUnion announcementChannel = null;
-
-	@Override
-	public void call(SlashCommandInteractionEvent event) {
-		// TODO set the fallback to this guild's default announcement channel
-		announcementChannel = event.getOption("channel", null, OptionMapping::getAsChannel);
-
-		// Create the modal for announcement submission
-		TextInput title = TextInput.create("title", "Title", TextInputStyle.SHORT).setPlaceholder("Title")
-				.setMinLength(1).setMaxLength(100).build();
-		TextInput content = TextInput.create("content", "Content", TextInputStyle.PARAGRAPH)
-				.setPlaceholder("Announcement Description").setMinLength(1).setMaxLength(1000).build();
-		Modal announcementTemplate = Modal.create(MODAL_ID, "Announcement Template")
-				.addActionRows(ActionRow.of(title), ActionRow.of(content)).build();
-		event.replyModal(announcementTemplate).queue();
-	}
+	private GuildChannelUnion announcementChannel = null; // Load the default announcement channel on start
 
 	@SubscribeEvent
 	public void announcementSubmission(ModalInteractionEvent event) {
 		if (event.getModalId().equals(MODAL_ID)) {
 			List<String> values = event.getValues().stream().map(ModalMapping::getAsString).toList();
-			MessageCreateData announcement = op.CreateAnnouncement(event.getUser(), values.get(0), values.get(1));
+			MessageCreateData announcement = op.createAnnouncement(event.getUser(), values.get(0), values.get(1));
 			announcementChannel.asGuildMessageChannel().sendMessage(announcement).queue();
 			event.reply("Announcement sent in channel " + announcementChannel.getJumpUrl()).setEphemeral(true).queue();
 			announcementChannel = null;
@@ -79,6 +64,21 @@ public class AnnouncementCommand extends GuildCommand {
 		return Arrays.asList(new OptionData(OptionType.CHANNEL, "channel", "The channel to send the announcement to"));
 	}
 
+	@Override
+	public void call(SlashCommandInteractionEvent event) {
+		// TODO set the fallback to this guild's default announcement channel
+		announcementChannel = event.getOption("channel", null, OptionMapping::getAsChannel);
+		
+		// Create the modal for announcement submission
+		TextInput title = TextInput.create("title", "Title", TextInputStyle.SHORT).setPlaceholder("Title")
+				.setMaxLength(100).build();
+		TextInput content = TextInput.create("content", "Content", TextInputStyle.PARAGRAPH)
+				.setPlaceholder("Announcement Description").setMaxLength(1000).build();
+		Modal announcementTemplate = Modal.create(MODAL_ID, "Announcement Template")
+				.addActionRows(ActionRow.of(title), ActionRow.of(content)).build();
+		event.replyModal(announcementTemplate).queue();
+	}
+	
 	@Override
 	public DefaultMemberPermissions getPermissions() {
 		return DefaultMemberPermissions.DISABLED;

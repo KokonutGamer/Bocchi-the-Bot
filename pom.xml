@@ -4,7 +4,7 @@
 
 	<groupId>me.gabelapingcao</groupId>
 	<artifactId>bocchi</artifactId>
-	<version>1.0.4</version>
+	<version>1.0.7</version>
 	<name>bocchi-the-bot</name>
 
 	<properties>

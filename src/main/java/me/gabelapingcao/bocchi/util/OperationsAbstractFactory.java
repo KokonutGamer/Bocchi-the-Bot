@@ -31,19 +31,19 @@ public abstract class OperationsAbstractFactory {
 	protected TextChannel announcementsChannel;
 	protected TextChannel welcomeChannel;
 
-	public abstract MessageCreateData SimpleCreateMessage(String text);
+	public abstract MessageCreateData simpleCreateMessage(String text);
 
-	public abstract void SimpleEditMessage(Message message, String text);
+	public abstract void simpleEditMessage(Message message, String text);
 
-	public abstract MessageCreateData SimpleCreateEmbedMessage(User author, String text);
+	public abstract MessageCreateData simpleCreateEmbedMessage(User author, String text);
 
-	public abstract MessageCreateData CreateReactableMessage(User author, String text, Button... buttons);
+	public abstract MessageCreateData createReactableMessage(User author, String text, Button... buttons);
 
-	public abstract MessageCreateData CreateAnnouncement(User author, String title, String text);
+	public abstract MessageCreateData createAnnouncement(User author, String title, String text);
 
-	public abstract MessageCreateData CreateWelcomeMessage(User member);
+	public abstract MessageCreateData createWelcomeMessage(User member);
 
-	public abstract void EditMessage(Message message, MessageEditData data);
+	public abstract void editMessage(Message message, MessageEditData data);
 
 	public Color getColor() {
 		return color;
